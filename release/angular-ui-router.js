@@ -1,6 +1,6 @@
 /**
  * State-based routing for AngularJS
- * @version v0.2.11-dev-2015-01-30
+ * @version v0.2.11-dev-2015-02-03
  * @link http://angular-ui.github.com/
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
@@ -37,27 +37,6 @@ function merge(dst) {
     }
   });
   return dst;
-}
-
-function copyParams(src, dest) {
-  var params = {};
-  forEach(src, function(param, key) {
-    var segments = key.split('.');
-    var tmp = params;
-    forEach(segments, function(segment, index) {
-      if (index < segments.length-1) {
-        if (!tmp[segment]) {
-          tmp[segment] = {};
-        }
-        if (!isObject(tmp[segment])) throw new Error("State parameter '" + key + "' is invalid: '" + segments.slice(0,index ).join('.') + "' is already defined.");
-        tmp = tmp[segment];
-      } else {
-        if (isObject(tmp[segment])) throw new Error("Unexpected parameter '" + key + "': it already has sub-parameters.");
-        tmp[segment] = param;
-      }
-    });
-  });
-  copy(params, dest);
 }
 
 /**
@@ -2656,7 +2635,7 @@ function $StateProvider(   $urlRouterProvider,   $urlMatcherFactory) {
         $state.$current = to;
         $state.current = to.self;
         $state.params = toParams;
-        copyParams($state.params, $stateParams);
+        copy($state.params, $stateParams);
         $state.transition = null;
 
         if (options.location && to.navigable) {
